@@ -1,4 +1,5 @@
 ﻿
+
 using System.Numerics;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,7 +22,7 @@ namespace Calculator
 
         private bool wasDelPressed = false;
 
-        string[] operators = ["+", "-", "*", "/", "**", "e"];
+        string[] operators = ["(", "+", "-", "*", "/", "**", "e"];
 
         public MainWindow()
         {
@@ -77,11 +78,15 @@ namespace Calculator
             {
                 if (string.IsNullOrEmpty(calc))
                 {
+                    int _start = 0;
                     for (int i = 0; i < lastExpression.Length; i++)
                     {
+                        if (lastExpression[i] == '(')
+                            _start++;
+
                         if (operators.Contains(Convert.ToString(lastExpression[i])) && !operators.Contains(Convert.ToString(lastExpression[Math.Clamp(i-1, 0, int.MaxValue)])))
                         {
-                            calc = lastAnswerString + lastExpression.Substring(i);
+                            calc = lastExpression.Substring(0, _start) + lastAnswerString + lastExpression.Substring(i);
                             break;
                         }
                     }
@@ -113,7 +118,7 @@ namespace Calculator
             lastExpression = calc;
             wasDelPressed = false;
             calc = "";
-            lastAnswerString = resultString != "Err." ? resultString : "";
+            lastAnswerString = resultString != "Err." ? resultString.Replace(',', '.') : "";
 
         }
 
